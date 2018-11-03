@@ -1,0 +1,2 @@
+# AwakeningBearByEnchantjs
+クマ覚性
