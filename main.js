@@ -6,6 +6,7 @@ IMAGE = {
     apad: "./assets/images/apad.png"
 };
 
+RADIAN = Math.PI / 180;
 const main = () => {
     const game = new Core();
     game.fps = 60;
@@ -15,16 +16,43 @@ const main = () => {
     const scene = game.rootScene;
     scene.backgroundColor = "#666";
 
+    ////////////////////////////////////////
+    // Classの作成
     game.on('load', () => {
         const Bear = Class.create(Sprite, {
             initialize: function(x, y) {
                 Sprite.call(this, 32, 32);
                 this.x = x;
                 this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.speed = 3;
                 this.image = game.assets[IMAGE.bear1];
+                this.on("enterframe", function () {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.scaleX = this.vx / Math.abs(this.vx);
+                    this.returnToWindow();
+                });
                 scene.addChild(this);
+            },
+            randomVector: function () {
+                var r = Math.random() * 360;
+                this.vx = Math.sin(RADIAN * r) * this.speed;
+                this.vy = Math.cos(RADIAN * r) * this.speed;
+            },
+            returnToWindow: function () {
+                if (this.x > game.width - this.width|| this.x < 0) {
+                    this.x -= this.vx;
+                    this.vx = -this.vx;
+                }
+                if (this.y > game.width - this.height|| this.y < 0) {
+                    this.y -= this.vy;
+                    this.vy = -this.vy;
+                }
             }
-        });
+
+       });
 
         const Stick = Class.create(Sprite, {
             initialize: function (x, y) {
@@ -57,6 +85,9 @@ const main = () => {
                 scene.addChild(this);
             }
         });
+        // Classの作成
+        ////////////////////////////////////////
+
         const bear = new Bear(144, 144);
         const stick = new Stick(0, 0);
         const cursor = new Cursor(0, 0);
@@ -68,11 +99,13 @@ const main = () => {
                 bear.frame = 3;
             } else {
                 stick.rotation = 0;
-                bear.frame = 0;
+                bear.frame = game.frame / 3 % 3;
             };
+
+            if (game.frame % 70 == 0) bear.randomVector();
         });
         ////////////////////////////////////////
-        // マウスの座標にオブジェクトを追従
+        // マウスの座標にオブジェクトを追従させるための関数
         // http://jsdo.it/tamaki998/akzY(引用)
 
         function setPosition(objs) {
@@ -96,6 +129,8 @@ const main = () => {
             }
             return pos;
         }
+        // マウスの座標にオブジェクトを追従させるための関数
+        // http://jsdo.it/tamaki998/akzY(引用)
         ////////////////////////////////////////
     });
     game.start();
