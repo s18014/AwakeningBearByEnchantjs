@@ -1,11 +1,12 @@
 enchant();
 
-let game, scene;
+let game;
 
 IMAGE = {
     bear: "./assets/images/chara1.png",
     icon: "./assets/images/icon0.png",
-    apad: "./assets/images/apad.png"
+    apad: "./assets/images/apad.png",
+    start: "./assets/images/start.png"
 };
 
 BEAR_LINES = [
@@ -18,8 +19,10 @@ BEAR_LINES = [
 
 RADIAN = Math.PI / 180; // ラジアン、座標計算で使う
 
+MOUSE_POS = {x: 0, y: 0};
+
 const Bear = Class.create(Sprite, {
-    initialize: function(x, y) {
+    initialize: function(scene, x, y) {
         Sprite.call(this, 32, 32);
         this.maxHp = 3;
         this.hp = this.maxHp;
@@ -91,7 +94,7 @@ const Bear = Class.create(Sprite, {
 });
 
 const Stick = Class.create(Sprite, {
-    initialize: function (x, y) {
+    initialize: function (scene, x, y) {
         Sprite.call(this, 16, 16);
         this.x = x;
         this.y = y;
@@ -99,6 +102,10 @@ const Stick = Class.create(Sprite, {
         this.scaleX = 1.5;
         this.scaleY = 1.5;
         this.image = game.assets[IMAGE.icon];
+        this.on("enterframe", function() {
+            this.x = MOUSE_POS.x - this.width / 2;
+            this.y = MOUSE_POS.y - this.height / 2;
+        });
         scene.addChild(this);
     },
 
@@ -112,7 +119,7 @@ const Stick = Class.create(Sprite, {
 });
 
 const Cursor = Class.create(Sprite, {
-    initialize: function (x, y) {
+    initialize: function (scene, x, y) {
         Sprite.call(this, 100, 100);
         this.x = x;
         this.y = y;
@@ -120,12 +127,16 @@ const Cursor = Class.create(Sprite, {
         this.scaleX = 0.3;
         this.scaleY = 0.3;
         this.image = game.assets[IMAGE.apad];
+        this.on("enterframe", function() {
+            this.x = MOUSE_POS.x - this.width / 2;
+            this.y = MOUSE_POS.y - this.height / 2;
+        });
         scene.addChild(this);
     }
 });
 
 const GaugeBar = Class.create(Surface, {
-    initialize:  function (x, y, x2, y2) {
+    initialize:  function (scene, x, y, x2, y2) {
         Surface.call(this, game.width, game.height);
         this.x = x;
         this.y = y;
@@ -152,7 +163,7 @@ const GaugeBar = Class.create(Surface, {
 });
 
 const Comments = Class.create(Label, {
-    initialize: function (speeker, comments) {
+    initialize: function (scene, speeker, comments) {
         Label.call(this, "");
         this.speeker = speeker;
         this.comments = comments;
@@ -176,101 +187,99 @@ const Comments = Class.create(Label, {
     }
 });
 
-
-
-////////////////////////////////////////
-// マウスの座標にオブジェクトを追従させるための関数
-// http://jsdo.it/tamaki998/akzY(引用)
-
-function setPosition(objs) {
-    window.document.onmousemove = function (e) {
-        objs.forEach((obj) => {
-            obj.moveTo(getMousePosition(e).x - obj.width / 2, getMousePosition(e).y - obj.height / 2);
-        });
-    };
-}
-
-function getMousePosition(e) {
-    var pos = [];
-    if(e) {
-        // game.scaleの値が反映されている？ので割ってあげる
-        pos.x = e.pageX / game.scale;
-        pos.y = e.pageY / game.scale;
-    }
-    else {
-        pos.x = (event.x + document.body.scrollLeft) / game.scale;
-        pos.y = (event.y + document.body.scrollTop) / game.scale;
-    }
-    return pos;
-}
-// マウスの座標にオブジェクトを追従させるための関数
-// http://jsdo.it/tamaki998/akzY(引用)
-////////////////////////////////////////
-
-
 const main = () => {
     game = new Core();
     game.fps = 60;
     game.preload(IMAGE.bear);
     game.preload(IMAGE.icon);
     game.preload(IMAGE.apad);
+    game.preload(IMAGE.start);
     game.time = 0;
-    scene = game.rootScene;
-    scene.backgroundColor = "#666";
 
+    document.body.addEventListener("mousemove", function (e) { // マウスの座標を取得
+        MOUSE_POS.x = e.pageX / game.scale;
+        MOUSE_POS.y = e.pageY / game.scale;
+    });
 
     game.on('load', () => {
-        // 初期化処理
-        const bear = new Bear(144, 144);
-        const stick = new Stick(-100, -100);
-        const cursor = new Cursor(-100, -100);
-        const ecstasyGauge = new GaugeBar(10, game.height - 10, 30, -game.height + 60);
-        const comment = new Comments(bear, BEAR_LINES);
 
-        // MAIN処理
-        game.addEventListener("enterframe", function () {
-            setPosition([stick, cursor]); // マウスの位置に棒とカーソルを持ってくる、コピペした関数
+        // ----- タイトルシーンの作成 -----
+        const titleScene = function () {
+            const scene = new Scene();
+            scene.backgroundColor = "rgb(255, 90, 90, 0.3)";
+
+            const cursor = new Cursor(scene, 0, 0);
+            const startText = new Sprite(236, 48);
+            startText.image = game.assets[IMAGE.start]
+            startText.x = game.width / 2 - 236 / 2;
+            startText.y = game.height / 2 - 48;
+            scene.addChild(startText);
+
+            scene.on("touchstart", function() {
+                game.popScene();
+            });
+            return scene;
+        }
+
+        // ----- ゲームシーンの作成 -----
+        const gameScene = function () {
+            const scene = new Scene();
+            scene.backgroundColor = "#999";
+
+            // 初期化処理
+            const bear = new Bear(scene, 144, 144);
+            const stick = new Stick(scene, -100, -100);
+            const cursor = new Cursor(scene, -100, -100);
+            const ecstasyGauge = new GaugeBar(scene, 10, game.height - 10, 30, -game.height + 60);
+            const comment = new Comments(scene, bear, BEAR_LINES);
+
+            ecstasyGauge.draw();
+
+            // MAIN処理
+            scene.addEventListener("enterframe", function () {
 
 
-            // 棒とクマが当たった時の処理
-            if (stick.intersect(bear)) {
-                stick.hit();
-                bear.hit();
-                var ratio = bear.getHpRatio();
-                if (ratio < 0.2) {
-                    comment.show(4);
-                } else if (ratio < 0.3) {
-                    comment.show(3);
-                } else if (ratio < 0.5){
-                    comment.show(2);
-                } else if (ratio < 0.7) {
-                    comment.show(1);
+                // 棒とクマが当たった時の処理
+                if (stick.intersect(bear)) {
+                    stick.hit();
+                    bear.hit();
+                    var ratio = bear.getHpRatio();
+                    if (ratio < 0.2) {
+                        comment.show(4);
+                    } else if (ratio < 0.3) {
+                        comment.show(3);
+                    } else if (ratio < 0.5){
+                        comment.show(2);
+                    } else if (ratio < 0.7) {
+                        comment.show(1);
+                    } else {
+                        comment.show(0);
+                    }
                 } else {
-                    comment.show(0);
+                    stick.setDefultFrame();
+                    bear.moveAnime();
+                    comment.invisible();
+                };
+
+                // 快感ゲージとクマのHPを同期する
+                ecstasyGauge.gauge = 1 - bear.getHpRatio();
+
+                // ゲームオーバー処理
+                if (bear.hp <= 0) {
+                    game.pushScene(gameOverScene());
                 }
-            } else {
-                stick.setDefultFrame();
-                bear.moveAnime();
-                comment.invisible();
-            };
+            });
+            return scene;
+        }
 
-            // 快感ゲージとクマのHPを同期する
-            ecstasyGauge.gauge = 1 - bear.getHpRatio();
-
-            // ゲームオーバー処理
-            if (bear.hp <= 0) {
-                scene.removeChild(ecstasyGauge);
-                scene.removeChild(comment);
-                scene.removeChild(stick);
-                scene.removeChild(cursor);
-                bear.x = game.width / 2 - 16;
-                bear.y = game.height / 2 + 100;
-                bear.scaleX = 15;
-                bear.scaleY = 15;
-                bear.frame = 0;
-                game.stop();
-            }
-        });
+        // ゲームオーバーシーンの作成
+        const gameOverScene = function () {
+            const scene = new Scene();
+            scene.backgroundColor = "rgb(255, 90, 90, 0.6)";
+            return scene;
+        };
+        game.replaceScene(gameScene());
+        game.pushScene(titleScene());
     });
     game.start();
 };
