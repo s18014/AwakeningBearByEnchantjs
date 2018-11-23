@@ -9,13 +9,21 @@ IMAGE = {
     start: "./assets/images/start.png"
 };
 
+SOUND = {
+    slap: "./assets/sounds/slap1.mp3",
+    boyDamage1: "./assets/sounds/game_thief-boy-damage1.mp3",
+    boyDeath1: "./assets/sounds/game_thief-boy-death1.mp3",
+    ko: "./assets/sounds/ko1.mp3",
+    BGM1: "./assets/sounds/game_maoudamashii_5_casino01.mp3"
+};
+
 BEAR_LINES = [
     "痛い！！",
     "やめて！！",
     "あっ...",
-    "きもち...",
+    "なんだか...",
     "だめぇぇぇ！！！"
-]
+];
 
 RADIAN = Math.PI / 180; // ラジアン、座標計算で使う
 
@@ -190,10 +198,14 @@ const Comments = Class.create(Label, {
 const main = () => {
     game = new Core();
     game.fps = 60;
-    game.preload(IMAGE.bear);
-    game.preload(IMAGE.icon);
-    game.preload(IMAGE.apad);
-    game.preload(IMAGE.start);
+    game.preload([IMAGE.bear, IMAGE.apad, IMAGE.icon, IMAGE.start]);
+    game.preload([
+        SOUND.slap,
+        SOUND.boyDeath1,
+        SOUND.boyDamage1,
+        SOUND.ko,
+        SOUND.BGM1
+    ]);
     game.time = 0;
 
     document.body.addEventListener("mousemove", function (e) { // マウスの座標を取得
@@ -210,7 +222,7 @@ const main = () => {
 
             const cursor = new Cursor(scene, 0, 0);
             const startText = new Sprite(236, 48);
-            startText.image = game.assets[IMAGE.start]
+            startText.image = game.assets[IMAGE.start];
             startText.x = game.width / 2 - 236 / 2;
             startText.y = game.height / 2 - 48;
             scene.addChild(startText);
@@ -219,7 +231,7 @@ const main = () => {
                 game.popScene();
             });
             return scene;
-        }
+        };
 
         // ----- ゲームシーンの作成 -----
         const gameScene = function () {
@@ -228,19 +240,22 @@ const main = () => {
 
             // 初期化処理
             const bear = new Bear(scene, 144, 144);
-            const stick = new Stick(scene, -100, -100);
             const cursor = new Cursor(scene, -100, -100);
-            const ecstasyGauge = new GaugeBar(scene, 10, game.height - 10, 30, -game.height + 60);
+            const stick = new Stick(scene, -100, -100);
             const comment = new Comments(scene, bear, BEAR_LINES);
+            const ecstasyGauge = new GaugeBar(scene, 10, game.height - 10, 30, -game.height + 60);
+            const bgm = game.assets[SOUND.BGM1];
+            bgm.volume = 0.7;
 
             ecstasyGauge.draw();
 
             // MAIN処理
             scene.addEventListener("enterframe", function () {
-
+                bgm.play();
 
                 // 棒とクマが当たった時の処理
                 if (stick.intersect(bear)) {
+                    game.assets[SOUND.slap].play();
                     stick.hit();
                     bear.hit();
                     var ratio = bear.getHpRatio();
@@ -266,11 +281,12 @@ const main = () => {
 
                 // ゲームオーバー処理
                 if (bear.hp <= 0) {
+                    game.assets[SOUND.ko].play();
                     game.pushScene(gameOverScene());
                 }
             });
             return scene;
-        }
+        };
 
         // ゲームオーバーシーンの作成
         const gameOverScene = function () {
