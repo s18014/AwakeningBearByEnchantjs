@@ -26,6 +26,9 @@ BEAR_LINES = [
     "だめぇぇぇ！！！"
 ];
 
+HIGHSCORE = null;
+
+
 // マップのデータ
 tiles = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
@@ -80,7 +83,7 @@ MOUSE_POS = {x: 0, y: 0};
 const Bear = Class.create(Sprite, {
     initialize: function(scene, x, y) {
         Sprite.call(this, 32, 32);
-        this.maxHp = 3;
+        this.maxHp = 5;
         this.hp = this.maxHp;
         this.x = x;
         this.y = y;
@@ -227,8 +230,8 @@ const GaugeBar = Class.create(Surface, {
 const Comments = Class.create(Label, {
     initialize: function (scene, speeker, comments) {
         Label.call(this, "");
-        this.speeker = speeker;
-        this.comments = comments;
+        this.speeker = speeker; // コメントの吹き出しを出す対象
+        this.comments = comments; // commentsは配列で扱う
         this.height = 20;
         this.font = "16px monospace";
         this.textAlign = "center";
@@ -267,6 +270,7 @@ const Timer = Class.create(Label, {
         this.x = x - this.width / 2;
         this.y = y;
         this.time = 0;
+        this.text = this.time.toFixed(2);
         this.backgroundColor = "rgb(255, 255, 255, 0.7)";
         this.font = "16px monospace";
         this.textAlign = "right";
@@ -318,12 +322,12 @@ const main = () => {
             const scene = new Scene();
             scene.backgroundColor = "rgb(255, 90, 90, 0.3)";
 
-            const cursor = new Cursor(scene, 0, 0);
             const startText = new Sprite(236, 48);
             startText.image = game.assets[IMAGE.start];
             startText.x = game.width / 2 - 236 / 2;
             startText.y = game.height / 2 - 48;
             scene.addChild(startText);
+            const cursor = new Cursor(scene, 0, 0);
 
             scene.on("touchstart", function() {
                 game.popScene();
@@ -352,6 +356,7 @@ const main = () => {
             // MAIN処理
             scene.addEventListener("enterframe", function () {
                 bgm.play();
+                bgm.loop = true;
 
                 // 棒とクマが当たった時の処理
                 if (stick.intersect(bear)) {
@@ -381,8 +386,10 @@ const main = () => {
 
                 // ゲームオーバー処理
                 if (bear.hp <= 0) {
+                    ecstasyGauge.draw();
                     game.time = timer.time;
-                    game.assets[SOUND.ko].play();
+                    if (HIGHSCORE == null || HIGHSCORE > game.time) HIGHSCORE = game.time;
+                    game.assets[SOUND.ko].clone().play();
                     game.pushScene(gameOverScene());
                 }
             });
@@ -393,6 +400,58 @@ const main = () => {
         const gameOverScene = function () {
             const scene = new Scene();
             scene.backgroundColor = "rgb(255, 90, 90, 0.6)";
+
+            const title = new Label("調教完了");
+            title.x = game.width / 2 - title.width / 2;
+            title.y = 0;
+            title.font = "50px monospace";
+            title.color = "#fff";
+            title.textAlign = "center";
+            title.widht = 100;
+            title.height = 30;
+            scene.addChild(title);
+
+            const score = new Label("SCORE:" + game.time.toFixed(2));
+            score.x = game.width / 2 - score.width / 2;
+            score.y = game.height / 2;
+            score.font = "30px monospace";
+            score.color = "#fff";
+            score.textAlign = "center";
+            score.widht = 100;
+            score.height = 30;
+            scene.addChild(score);
+
+            const highScore = new Label("HIGHSCORE:" + HIGHSCORE.toFixed(2));
+            highScore.x = game.width / 2 - highScore.width / 2;
+            highScore.y = game.height / 2 + 50;
+            highScore.font = "30px monospace";
+            highScore.color = "#fff";
+            highScore.textAlign = "center";
+            highScore.widht = 100;
+            highScore.height = 30;
+            scene.addChild(highScore);
+
+            const retryButton = new Label("もう一回");
+            retryButton.font = "20px monospace";
+            retryButton.color = "#fff";
+            retryButton.textAlign = "center";
+            retryButton.width = 100;
+            retryButton.height = 30;
+            retryButton.x = game.width / 2 - retryButton.width / 2;
+            retryButton.y = game.height - 50;
+            retryButton.backgroundColor = "red";
+            scene.addChild(retryButton);
+
+            const cursor = new Cursor(scene, 0, 0);
+
+            scene.on("touchstart", function () {
+                if (retryButton.intersect(cursor)) {
+                    game.popScene();
+                    game.replaceScene(gameScene());
+                    game.pushScene(titleScene());
+                };
+            });
+
             return scene;
         };
         game.replaceScene(gameScene());
