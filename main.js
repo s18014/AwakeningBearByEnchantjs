@@ -6,7 +6,8 @@ IMAGE = {
     bear: "./assets/images/chara1.png",
     icon: "./assets/images/icon0.png",
     apad: "./assets/images/apad.png",
-    start: "./assets/images/start.png"
+    start: "./assets/images/start.png",
+    map: "./assets/images/map0.png"
 };
 
 SOUND = {
@@ -23,6 +24,53 @@ BEAR_LINES = [
     "あっ...",
     "なんだか...",
     "だめぇぇぇ！！！"
+];
+
+// マップのデータ
+tiles = [
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+];
+
+objs = [
+    [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16],
+    [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16],
 ];
 
 RADIAN = Math.PI / 180; // ラジアン、座標計算で使う
@@ -128,13 +176,12 @@ const Stick = Class.create(Sprite, {
 
 const Cursor = Class.create(Sprite, {
     initialize: function (scene, x, y) {
-        Sprite.call(this, 100, 100);
+        Sprite.call(this, 16, 16);
         this.x = x;
         this.y = y;
-        this.frame = 0;
-        this.scaleX = 0.3;
-        this.scaleY = 0.3;
-        this.image = game.assets[IMAGE.apad];
+        this.frame = 16 * 2 + 11;
+        this.rotation = -45;
+        this.image = game.assets[IMAGE.icon];
         this.on("enterframe", function() {
             this.x = MOUSE_POS.x - this.width / 2;
             this.y = MOUSE_POS.y - this.height / 2;
@@ -164,8 +211,15 @@ const GaugeBar = Class.create(Surface, {
         this.context.strokeRect(this.x, this.y, this.x2, this.y2);
         this.context.fill();
         this.context.beginPath();
+        this.context.fillStyle = "rgb(255, 255, 255, 0.2)";
+        this.context.fillRect(this.x, this.y, this.x2, this.y2);
+        this.context.beginPath();
+        this.context.fillStyle = "rgb(255, 90, 90, 0.5)";
         this.context.fillRect(this.x, this.y, this.x2, this.y2 * this.gauge); // this.y2に0~1を掛けてゲージの長さを表現
-        this.context.fillStyle = "rgb(255, 90, 90, 0.3)";
+        this.context.fill();
+        this.context.beginPath();
+        this.context.fillStyle = "red";
+        this.context.fillRect(this.x, this.y + this.y2 * this.gauge, this.x2, 3);
         this.context.fill();
     }
 });
@@ -177,7 +231,7 @@ const Comments = Class.create(Label, {
         this.comments = comments;
         this.font = "16px monospace";
         this.textAlign = "center";
-        this.backgroundColor = "rgb(255, 255, 255, 0.6)";
+        this.backgroundColor = "rgb(255, 255, 255, 0.7)";
         scene.addChild(this);
     },
 
@@ -195,10 +249,27 @@ const Comments = Class.create(Label, {
     }
 });
 
+const MyMap = Class.create(Map, {
+    initialize: function (scene, w, h, image, loadData) {
+        Map.call(this, w, h);
+        this.image = image;
+        this.loadData(loadData);
+        scene.addChild(this);
+    }
+});
+
+
 const main = () => {
     game = new Core();
     game.fps = 60;
-    game.preload([IMAGE.bear, IMAGE.apad, IMAGE.icon, IMAGE.start]);
+    game.time = 0;
+    game.preload([
+        IMAGE.bear,
+        IMAGE.apad,
+        IMAGE.icon,
+        IMAGE.start,
+        IMAGE.map
+    ]);
     game.preload([
         SOUND.slap,
         SOUND.boyDeath1,
@@ -206,7 +277,6 @@ const main = () => {
         SOUND.ko,
         SOUND.BGM1
     ]);
-    game.time = 0;
 
     document.body.addEventListener("mousemove", function (e) { // マウスの座標を取得
         MOUSE_POS.x = e.pageX / game.scale;
@@ -239,8 +309,9 @@ const main = () => {
             scene.backgroundColor = "#999";
 
             // 初期化処理
+            const map1 = new MyMap(scene, 16, 16, game.assets[IMAGE.map], tiles);
+            const map2 = new MyMap(scene, 16, 16, game.assets[IMAGE.map], objs);
             const bear = new Bear(scene, 144, 144);
-            const cursor = new Cursor(scene, -100, -100);
             const stick = new Stick(scene, -100, -100);
             const comment = new Comments(scene, bear, BEAR_LINES);
             const ecstasyGauge = new GaugeBar(scene, 10, game.height - 10, 30, -game.height + 60);
