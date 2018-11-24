@@ -229,16 +229,17 @@ const Comments = Class.create(Label, {
         Label.call(this, "");
         this.speeker = speeker;
         this.comments = comments;
+        this.height = 20;
         this.font = "16px monospace";
         this.textAlign = "center";
         this.backgroundColor = "rgb(255, 255, 255, 0.7)";
+        this.visible = false;
         scene.addChild(this);
     },
 
     show: function (index) {
         this.visible = true;
         this.text = this.comments[index];
-        this.height = 20;
         this.width = this.text.length * 18;
         this.x = this.speeker.x - this.width / 2 + this.speeker.width / 2;
         this.y = this.speeker.y - 20;
@@ -258,6 +259,33 @@ const MyMap = Class.create(Map, {
     }
 });
 
+const Timer = Class.create(Label, {
+    initialize: function (scene, x, y) {
+        Label.call(this, "")
+        this.width = 70;
+        this.height = 20;
+        this.x = x - this.width / 2;
+        this.y = y;
+        this.time = 0;
+        this.backgroundColor = "rgb(255, 255, 255, 0.7)";
+        this.font = "16px monospace";
+        this.textAlign = "right";
+
+
+        this.timerIcon = new Sprite(16, 16);
+        this.timerIcon.image = game.assets[IMAGE.icon];
+        this.timerIcon.frame = 16 * 2 + 2;
+        this.timerIcon.x = this.x;
+        this.timerIcon.y = this.y + 2;
+
+        this.on("enterframe", function () {
+            this.time += 1 / game.fps;
+            this.text = this.time.toFixed(2);
+        });
+        scene.addChild(this);
+        scene.addChild(this.timerIcon);
+    }
+});
 
 const main = () => {
     game = new Core();
@@ -314,6 +342,7 @@ const main = () => {
             const bear = new Bear(scene, 144, 144);
             const stick = new Stick(scene, -100, -100);
             const comment = new Comments(scene, bear, BEAR_LINES);
+            const timer = new Timer(scene, game.width / 2, 0);
             const ecstasyGauge = new GaugeBar(scene, 10, game.height - 10, 30, -game.height + 60);
             const bgm = game.assets[SOUND.BGM1];
             bgm.volume = 0.7;
@@ -352,6 +381,7 @@ const main = () => {
 
                 // ゲームオーバー処理
                 if (bear.hp <= 0) {
+                    game.time = timer.time;
                     game.assets[SOUND.ko].play();
                     game.pushScene(gameOverScene());
                 }
