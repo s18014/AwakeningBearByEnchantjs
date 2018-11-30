@@ -345,7 +345,7 @@ const main = () => {
             const timer = new Timer(scene, game.width / 2, 0);
             const ecstasyGauge = new GaugeBar(scene, 10, game.height - 10, 30, -game.height + 60);
             const bgm = game.assets[SOUND.BGM1];
-            bgm.volume = 0.7;
+            // bgm.volume = 0.7;
 
             ecstasyGauge.draw();
 
