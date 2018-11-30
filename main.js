@@ -12,8 +12,6 @@ IMAGE = {
 
 SOUND = {
     slap: "./assets/sounds/slap1.mp3",
-    boyDamage1: "./assets/sounds/game_thief-boy-damage1.mp3",
-    boyDeath1: "./assets/sounds/game_thief-boy-death1.mp3",
     ko: "./assets/sounds/ko1.mp3",
     BGM1: "./assets/sounds/game_maoudamashii_5_casino01.mp3"
 };
@@ -304,8 +302,6 @@ const main = () => {
     ]);
     game.preload([
         SOUND.slap,
-        SOUND.boyDeath1,
-        SOUND.boyDamage1,
         SOUND.ko,
         SOUND.BGM1
     ]);
